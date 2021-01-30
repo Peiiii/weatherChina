@@ -71,7 +71,7 @@ def getRegionId(*args):
 def extractNumbers(s):
     s2=''
     for char in s:
-        if char.isdigit():
+        if char.isdigit() or char=='-':
             s2+=char
     return s2
 class WeatherApp:
@@ -102,7 +102,7 @@ def getRegionData():
     return regionData
 def demo():
     app=WeatherApp()
-    id=getRegionId('北京','朝阳')
+    id=getRegionId('青海','海东','民和')
     print(id)
     x=app.getWeather7d(id)
     print(x)
