@@ -1,7 +1,7 @@
 import setuptools
 import os, glob
 
-with open("README.md", "r") as fh:
+with open("README.md", "r",encoding='utf-8') as fh:
     long_description = fh.read()
 
 
@@ -47,27 +47,27 @@ version = get_version()
 print("version:", version)
 setuptools.setup(
     executable=True,
-    name="weatherCN",  # Replace with your own username
+    name="weatherChina",  # Replace with your own username
     version=version,
     author="Wang Pei",
     author_email="1535376447@qq.com",
     description="The most simple way to get China city weather through python.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="http://github.com/Peiiii/weatherCN",
+    url="http://github.com/Peiiii/weatherChina",
     packages=packages,
-    package_dir={'weatherCN': 'weatherCN'},
+    package_dir={'weatherChina': 'weatherChina'},
     install_requires=[
         'requests'
     ],
     entry_points={
         'console_scripts': [
-            'weatherCN = weatherCN.clitools.cli:main',
+            'weatherChina = weatherChina.clitools.cli:main',
         ]
     },
     include_package_data=True,
     package_data={
-        'weatherCN': [
+        'weatherChina': [
             'data/*', 'data/*/*', 'data/*/*/*', 'data/*/*/*/*', 'data/*/*/*/*/*', 'data/*/*/*/*/*/*',
             'data/*/*/*/*/*/*/*',
         ]

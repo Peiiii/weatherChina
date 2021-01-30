@@ -5,4 +5,4 @@ scripts/**/*
 dist/**/*
 build/**/*
 local/**/*
-weatherCN.egg-info/**/*
+weatherChinar.egg-info/**/*
