@@ -1,11 +1,11 @@
-# weather_china
+# weatherChina
 The most simple way to get China city weather through python.
 一行代码查询近7日天气，pip一键安装，数据来源于中国天气网，只支持python3
 
 Install
 ---
 ```shell script
-pip3 install weather_china
+pip3 install weatherChina
 ```
 
 Usage
