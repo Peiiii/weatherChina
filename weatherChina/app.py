@@ -68,7 +68,12 @@ def getRegionId(*args):
     return regionTree.getRegionId(*args)
 
 
-
+def extractNumbers(s):
+    s2=''
+    for char in s:
+        if char.isdigit():
+            s2+=char
+    return s2
 class WeatherApp:
     def __init__(self):
         self.baseUrl = r"http://www.weather.com.cn/weather/"
@@ -80,8 +85,9 @@ class WeatherApp:
         response.encoding='utf-8'
         self.htmlResult = response.text
         highTemp = re.findall(r'<span>(.*?)</span>/<i>', self.htmlResult)
+        highTemp=[extractNumbers(x) for x in highTemp]
         lowTemp = re.findall(r'</span>/<i>(.*?)</i>', self.htmlResult)
-        lowTemp=[x[:-1] for x in lowTemp]
+        lowTemp=[extractNumbers(x) for x in lowTemp]
         detail = re.findall(r'<p title="(.*?)" class="wea">', self.htmlResult)
         return dict(
             lowTemp=lowTemp, highTemp=highTemp, detail=detail)
