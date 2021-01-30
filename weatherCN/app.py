@@ -1,0 +1,105 @@
+import requests
+import re
+import os
+import json
+data_path=os.path.dirname(__file__)+'/data/city.json'
+with open(data_path,'r',encoding='utf-8') as f:
+    regionData=json.load(f)
+
+
+def parse_county(counties):
+    data={}
+    for c in counties:
+        info = {}
+        info['id'] = c['districtId']
+        info['name'] = c['districtName']
+        info['level'] = 'county'
+        info['children'] = {}
+        data[info['name']]=info
+    return data
+
+def parse_city(cities):
+    data={}
+    for c in cities:
+        info = {}
+        info['id'] = c['cityId']
+        info['name'] = c['cityName']
+        info['level'] = 'city'
+        info['children'] = parse_county(c['districtList']) if 'districtList' in c.keys() else {}
+        data[info['name']] = info
+    return data
+
+
+def parse_province(provinces):
+    data={}
+    for p in provinces:
+        info = {}
+        info['id'] = p['id']
+        info['name'] = p['provinceName']
+        info['level'] = 'province'
+        info['children'] = parse_city(p['cityList'])
+        data[info['name']]=info
+    return data
+
+
+
+
+
+class Tree:
+    def __init__(self,data):
+        self.data= data
+    def getRegionId(self,*args):
+        node=self.getNode(*args)
+        return node['id']
+    def getNode(self,*keys):
+        assert len(keys)>=1
+        rootNode=self.data[keys[0]]
+
+        return self._getNode(rootNode,*keys[1:])
+
+    def _getNode(self,root, *keys):
+        for key in keys:
+            root = root['children'][key]
+        return root
+
+regionTree=Tree(parse_province(regionData))
+
+def getRegionId(*args):
+    return regionTree.getRegionId(*args)
+
+
+
+class WeatherApp:
+    def __init__(self):
+        self.baseUrl = r"http://www.weather.com.cn/weather/"
+        self.headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:23.0) Gecko/20100101 Firefox/23.0'}
+
+    def getWeather7d(self,regionId):
+        PageUrl = self.baseUrl + regionId + ".shtml"
+        response=requests.get(PageUrl,headers=self.headers)
+        response.encoding='utf-8'
+        self.htmlResult = response.text
+        highTemp = re.findall(r'<span>(.*?)</span>/<i>', self.htmlResult)
+        lowTemp = re.findall(r'</span>/<i>(.*?)</i>', self.htmlResult)
+        lowTemp=[x[:-1] for x in lowTemp]
+        detail = re.findall(r'<p title="(.*?)" class="wea">', self.htmlResult)
+        return dict(
+            lowTemp=lowTemp, highTemp=highTemp, detail=detail)
+
+app=WeatherApp()
+def getWeatherById(regionId):
+    return app.getWeather7d(regionId)
+def getWeatherByNames(*names):
+    regionId=getRegionId(*names)
+    return app.getWeather7d(regionId)
+def getRegionData():
+    return regionData
+def demo():
+    app=WeatherApp()
+    id=getRegionId('北京','朝阳')
+    print(id)
+    x=app.getWeather7d(id)
+    print(x)
+
+if __name__ == '__main__':
+    demo()

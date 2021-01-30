@@ -1,0 +1,11 @@
+{
+  "author": "Wang Pei",
+  "author_email": "1535376447@qq.com",
+  "pkg_name": "weatherCN",
+  "pkg_desc": "The most simple way to get China city weather through python.",
+  "url": "http://github.com/Peiiii/weatherCN",
+  "remote_url": "git@github.com:Peiiii/weatherCN",
+  "install_requires": [
+
+  ]
+}

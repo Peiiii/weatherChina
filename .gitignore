@@ -1,0 +1,8 @@
+.idea/**/*
+.code/**/*
+.vscode/**/*
+scripts/**/*
+dist/**/*
+build/**/*
+local/**/*
+weatherCN.egg-info/**/*
