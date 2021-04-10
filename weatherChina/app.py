@@ -91,13 +91,28 @@ class WeatherApp:
         detail = re.findall(r'<p title="(.*?)" class="wea">', self.htmlResult)
         return dict(
             lowTemp=lowTemp, highTemp=highTemp, detail=detail)
+			
+	def getWeather1d(self,regionId):
+        PageUrl = self.baseUrl + regionId + ".shtml"
+        response=requests.get(PageUrl,headers=self.headers)
+        response.encoding='utf-8'
+        self.htmlResult = response.text
+        data_json = re.findall(r'<script>\nvar hour3data=(.*?)\n</script>', self.htmlResult)
+        data_parser = json.loads(data_json[0])
+        return data_parser['1d']
 
 app=WeatherApp()
 def getWeatherById(regionId):
     return app.getWeather7d(regionId)
+def get1dWeatherById(regionId):
+	return app.getWeather1d(regionId)
 def getWeatherByNames(*names):
     regionId=getRegionId(*names)
     return app.getWeather7d(regionId)
+def get1dWeatherByNames(*names):
+    regionId=getRegionId(*names)
+    return app.get1dWeatherById(regionId)	
+
 def getRegionData():
     return regionData
 def demo():
@@ -106,6 +121,9 @@ def demo():
     print(id)
     x=app.getWeather7d(id)
     print(x)
+	oneDayWeather = app.getWeather7d(id)
+	print(oneDayWeather)
+	
 
 if __name__ == '__main__':
     demo()
